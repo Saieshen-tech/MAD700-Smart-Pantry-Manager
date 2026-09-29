@@ -161,6 +161,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.getWritableDatabase().delete(TABLE_INGREDIENTS, KEY_ID + "=?", new String[]{String.valueOf(id)});
     }
 
+    // Read ONE ingredient by its id (used to fill in the Edit screen)
+    public Cursor getIngredient(long id) {
+        return this.getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_INGREDIENTS + " WHERE " + KEY_ID + " = ?",
+                new String[]{String.valueOf(id)});
+    }
+
+    // Update an existing ingredient (the "U" in CRUD)
+    public int updateIngredient(long id, String name, float qty, String unit, String expiry) {
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, name);
+        values.put(KEY_QUANTITY, qty);
+        values.put(KEY_UNIT, unit);
+        values.put(KEY_EXPIRY, expiry);
+        return this.getWritableDatabase().update(TABLE_INGREDIENTS, values,
+                KEY_ID + " = ?", new String[]{String.valueOf(id)});
+    }
+
     // Strict Matching Logic:
     // A recipe is suggested only if NONE of its required ingredients is missing or short.
     // Pantry entries with the same name (e.g. two "Flour" rows) are added together.

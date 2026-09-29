@@ -1,6 +1,7 @@
 package com.sai.smartpantry;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,14 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         }
         holder.tvDetails.setText(details);
 
+        // Tap a row -> open the Edit screen, passing this ingredient's id through the Intent
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AddIngredientActivity.class);
+            intent.putExtra(AddIngredientActivity.EXTRA_INGREDIENT_ID, current.getId());
+            context.startActivity(intent);
+        });
+
+        // Tap the bin icon -> delete from the database, then reload the list
         holder.btnDelete.setOnClickListener(v -> {
             DatabaseHelper db = new DatabaseHelper(context);
             db.deleteIngredient(current.getId());
