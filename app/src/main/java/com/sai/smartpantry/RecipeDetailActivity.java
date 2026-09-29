@@ -4,7 +4,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 
+/**
+ * Shows one recipe: its ingredients (with how much the pantry has) and its method.
+ * The recipe id arrives through the Intent from RecipeAdapter.
+ */
 public class RecipeDetailActivity extends AppCompatActivity {
 
     private TextView tvTitle, tvIngredients, tvInstructions;
@@ -14,6 +19,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
+
+        // Toolbar with a back arrow
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         setTitle("Recipe");
 
         tvTitle = findViewById(R.id.tvRecipeTitle);
@@ -55,5 +67,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
         ingredientsCursor.close();
         tvIngredients.setText(sb.toString().trim());
+    }
+
+    // Back arrow in the toolbar closes this screen
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

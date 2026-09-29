@@ -4,42 +4,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etName"
+    <!-- Top bar with a back arrow and the screen title -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Ingredient Name"
-        android:inputType="textCapWords" />
+        android:layout_height="?attr/actionBarSize" />
 
-    <EditText
-        android:id="@+id/etQuantity"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Quantity"
-        android:inputType="numberDecimal" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <EditText
-        android:id="@+id/etUnit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Unit (e.g., g, ml, pcs)"
-        android:inputType="text" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <EditText
-        android:id="@+id/etExpiry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Expiry date (YYYY-MM-DD, optional)"
-        android:inputType="date" />
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingredient Name"
+                android:inputType="textCapWords" />
 
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:layout_marginTop="16dp" />
+            <EditText
+                android:id="@+id/etQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Quantity"
+                android:inputType="numberDecimal" />
 
+            <EditText
+                android:id="@+id/etUnit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Unit (e.g., g, ml, pcs)"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/etExpiry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Expiry date (YYYY-MM-DD, optional)"
+                android:inputType="date" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Save" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

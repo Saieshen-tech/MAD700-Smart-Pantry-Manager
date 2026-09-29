@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 
 /**
  * One screen used for BOTH adding and editing an ingredient.
@@ -28,6 +29,13 @@ public class AddIngredientActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_ingredient);
+
+        // Toolbar with a back arrow; its title changes for Add vs Edit below
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         etName = findViewById(R.id.etName);
         etQuantity = findViewById(R.id.etQuantity);
@@ -93,8 +101,10 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         if (unit.isEmpty()) unit = "pcs";
 
-        if (!expiry.isEmpty() && !expiry.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            etExpiry.setError("Use the format YYYY-MM-DD");
+        // Expiry is optional, but if given it must be a real date in YYYY-MM-DD format
+        if (!expiry.isEmpty()
+                && (!expiry.matches("\\d{4}-\\d{2}-\\d{2}") || PantryAdapter.daysUntil(expiry) == null)) {
+            etExpiry.setError("Enter a real date as YYYY-MM-DD");
             return;
         }
 
@@ -107,5 +117,12 @@ public class AddIngredientActivity extends AppCompatActivity {
             Toast.makeText(this, "Ingredient updated", Toast.LENGTH_SHORT).show();
         }
         finish(); // close this screen and go back to the pantry list
+    }
+
+    // Back arrow in the toolbar closes this screen without saving
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }
