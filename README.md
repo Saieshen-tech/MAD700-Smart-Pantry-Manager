@@ -56,7 +56,7 @@ Clone this repository:
 git clone https://github.com/saieshen govender /Smart-Pantry-Manager.git
 In Android Studio, choose File → Open and select the cloned folder. Wait for the Gradle sync to finish.
 Create an emulator in Device Manager (for example Medium Phone, API 24 or later), or connect an Android phone with USB debugging turned on.
-Click ▶ Run.
+Click  Run.
 
 The app opens with a starter pantry of 12 items, and 8 recipes are suggested straight away. Try adding Flour, 1, kg and Classic Pancakes will appear in the suggestions.
 
