@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
+import java.util.List;
 
 /**
  * Shows one recipe: its ingredients (with how much the pantry has) and its method.
@@ -46,26 +47,18 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
         recipeCursor.close();
 
-        Cursor ingredientsCursor = db.getIngredientsForRecipe(recipeId);
+        // Each line shows what the recipe needs and how much the pantry has,
+        // already converted to the recipe's unit (e.g. pantry "1 l" milk shows as 1000 ml)
+        List<RecipeIngredient> lines = db.getIngredientsForRecipe(recipeId);
         StringBuilder sb = new StringBuilder();
-        if (ingredientsCursor.moveToFirst()) {
-            int nameCol = ingredientsCursor.getColumnIndexOrThrow(DatabaseHelper.KEY_INGREDIENT_NAME);
-            int reqCol = ingredientsCursor.getColumnIndexOrThrow(DatabaseHelper.KEY_REQUIRED_QTY);
-            int unitCol = ingredientsCursor.getColumnIndexOrThrow(DatabaseHelper.KEY_UNIT);
-            int haveCol = ingredientsCursor.getColumnIndexOrThrow(DatabaseHelper.KEY_HAVE_QTY);
-            do {
-                String name = ingredientsCursor.getString(nameCol);
-                float required = ingredientsCursor.getFloat(reqCol);
-                String unit = ingredientsCursor.getString(unitCol);
-                float have = ingredientsCursor.getFloat(haveCol);
-
-                sb.append("• ").append(name).append(": ")
-                        .append(PantryAdapter.formatQty(required)).append(" ").append(unit)
-                        .append("  (you have ").append(PantryAdapter.formatQty(have)).append(")")
-                        .append("\n");
-            } while (ingredientsCursor.moveToNext());
+        for (RecipeIngredient line : lines) {
+            sb.append(line.isSatisfied() ? "✓ " : "✗ ")
+                    .append(line.getName()).append(": ")
+                    .append(PantryAdapter.formatQty(line.getRequiredQty())).append(" ").append(line.getUnit())
+                    .append("  (you have ").append(PantryAdapter.formatQty(line.getHaveQty()))
+                    .append(" ").append(line.getUnit()).append(")")
+                    .append("\n");
         }
-        ingredientsCursor.close();
         tvIngredients.setText(sb.toString().trim());
     }
 

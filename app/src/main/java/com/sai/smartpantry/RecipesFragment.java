@@ -1,6 +1,5 @@
 package com.sai.smartpantry;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
+/**
+ * "Suggested Recipes" tab: lists ONLY the recipes the user can make
+ * with what is in the pantry right now (strict matching).
+ */
 public class RecipesFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private TextView tvEmpty;
+    private TextView tvTitle, tvEmpty;
     private RecipeAdapter adapter;
     private ArrayList<Recipe> recipeList;
     private DatabaseHelper db;
@@ -32,6 +35,7 @@ public class RecipesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.recyclerViewRecipes);
+        tvTitle = view.findViewById(R.id.tvTitle);
         tvEmpty = view.findViewById(R.id.tvEmpty);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -42,8 +46,8 @@ public class RecipesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    // Re-run the matching every time this tab is shown,
-    // so suggestions follow pantry changes.
+    // Lifecycle: onResume runs every time this tab comes back into view,
+    // so the suggestions are re-checked after any pantry change.
     @Override
     public void onResume() {
         super.onResume();
@@ -51,20 +55,12 @@ public class RecipesFragment extends Fragment {
     }
 
     private void loadRecipes() {
-        Cursor cursor = db.getSuggestedRecipes(); // Strict Matching
         recipeList.clear();
-        if (cursor.moveToFirst()) {
-            int idCol = cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_ID);
-            int titleCol = cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TITLE);
-            do {
-                long id = cursor.getLong(idCol);
-                String title = cursor.getString(titleCol);
-                recipeList.add(new Recipe(id, title));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
+        recipeList.addAll(db.getSuggestedRecipes()); // strict matching happens here
         adapter.notifyDataSetChanged();
+
+        tvTitle.setText("Suggested Recipes (" + recipeList.size() + ")");
+        // Friendly message instead of a blank screen when nothing matches
         tvEmpty.setVisibility(recipeList.isEmpty() ? View.VISIBLE : View.GONE);
     }
 }
