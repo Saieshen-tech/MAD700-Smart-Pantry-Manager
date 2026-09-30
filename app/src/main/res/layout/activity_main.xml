@@ -12,6 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Top bar: shows the app name and the three-dot menu (Settings) -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
